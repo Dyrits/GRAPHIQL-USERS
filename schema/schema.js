@@ -3,9 +3,7 @@ const {
   GraphQLObjectType,
   GraphQLID, GraphQLString, GraphQLInt
 } = require("graphql");
-const {  find } = require("lodash");
-
-const { users } = require("../data/users");
+const axios = require("axios");
 
 const UserType = new GraphQLObjectType({
   name: "User",
@@ -23,7 +21,7 @@ const RootQueryType = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: GraphQLID } },
       resolve(source, args) {
-        return find(users, { id: args.id });
+        return axios.get(`http://localhost:3000/users/${args.id}`).then(({ data }) => data);
       }
     }
   }
