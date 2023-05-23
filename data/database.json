@@ -3,12 +3,32 @@
     {
       "id": 1,
       "name": "Leanne Graham",
-      "age": 25
+      "age": 20,
+      "company": 1
     },
     {
       "id": 2,
       "name": "Ervin Howell",
-      "age": 25
+      "age": 25,
+      "company": 1
+    },
+    {
+      "id": 3,
+      "name": "Clementine Bauch",
+      "age": 30,
+      "company": 2
+    }
+  ],
+  "companies": [
+    {
+      "id": 1,
+      "name": "Romaguera-Crona",
+      "description": "Multi-layered client-server neural-net"
+    },
+    {
+      "id": 2,
+      "name": "Deckow-Crist",
+      "description": "Proactive didactic contingency"
     }
   ]
 }
