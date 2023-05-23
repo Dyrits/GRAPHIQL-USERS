@@ -16,8 +16,8 @@ const CompanyType = new GraphQLObjectType({
     description: { type: GraphQLString },
     users: {
       type: new GraphQLList(UserType),
-      resolve(source, args) {
-        return json$server.get(`/companies/${source.id}/users`).then(({ data }) => data);
+      resolve({ id }) {
+        return json$server.get(`/companies/${id}/users`).then(({ data }) => data);
       }
     }
   })
@@ -31,8 +31,8 @@ const UserType = new GraphQLObjectType({
     age: { type: GraphQLInt },
     company: {
       type: CompanyType,
-      resolve(source, args) {
-        return json$server.get(`/companies/${source.company}`).then(({ data }) => data);
+      resolve({ company }) {
+        return json$server.get(`/companies/${company}`).then(({ data }) => data);
       }
     }
   })
@@ -43,28 +43,28 @@ const Query = new GraphQLObjectType({
   fields: {
     users: {
       type: new GraphQLList(UserType),
-      resolve(source, args) {
+      resolve() {
         return json$server.get("/users").then(({ data }) => data);
       }
     },
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },
-      resolve(source, args) {
-        return json$server.get(`/users/${args.id}`).then(({ data }) => data);
+      resolve(source, { id }) {
+        return json$server.get(`/users/${id}`).then(({ data }) => data);
       }
     },
     companies: {
       type: new GraphQLList(CompanyType),
-      resolve(source, args) {
+      resolve() {
         return json$server.get("/companies").then(({ data }) => data);
       }
     },
     company: {
       type: CompanyType,
       args: { id: { type: GraphQLID } },
-      resolve(source, args) {
-        return json$server.get(`/companies/${args.id}`).then(({ data }) => data);
+      resolve(source, { id }) {
+        return json$server.get(`/companies/${id}`).then(({ data }) => data);
       }
     }
   }
@@ -80,8 +80,8 @@ const Mutation = new GraphQLObjectType({
         age: { type: new GraphQLNonNull(GraphQLInt) },
         company: { type: GraphQLID }
       },
-      resolve(source, args) {
-        return json$server.post("/users", args).then(({ data }) => data);
+      resolve(source, user) {
+        return json$server.post("/users", user).then(({ data }) => data);
       }
     },
     updateUser: {
@@ -92,15 +92,15 @@ const Mutation = new GraphQLObjectType({
         age: { type: GraphQLInt },
         company: { type: GraphQLID }
       },
-      resolve(source, args) {
-        return json$server.patch(`/users/${args.id}`, args).then(({ data }) => data);
+      resolve(source, { id, name, age, company }) {
+        return json$server.patch(`/users/${id}`, { name, age, company }).then(({ data }) => data);
       }
     },
     deleteUser: {
       type: UserType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve(source, args) {
-        return json$server.delete(`/users/${args.id}`).then(({ data }) => data);
+      resolve(source, { id }) {
+        return json$server.delete(`/users/${id}`).then(({ data }) => data);
       }
     }
   }
