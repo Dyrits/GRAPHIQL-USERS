@@ -73,7 +73,7 @@ const Query = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: "UpsertOrDelete",
   fields: {
-    addUser: {
+    insertUser: {
       type: UserType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
@@ -82,6 +82,25 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(source, args) {
         return json$server.post("/users", args).then(({ data }) => data);
+      }
+    },
+    updateUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        company: { type: GraphQLID }
+      },
+      resolve(source, args) {
+        return json$server.patch(`/users/${args.id}`, args).then(({ data }) => data);
+      }
+    },
+    deleteUser: {
+      type: UserType,
+      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(source, args) {
+        return json$server.delete(`/users/${args.id}`).then(({ data }) => data);
       }
     }
   }
