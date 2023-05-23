@@ -1,12 +1,12 @@
 const {
   GraphQLSchema,
   GraphQLObjectType,
-  GraphQLID, GraphQLString, GraphQLInt, GraphQLList
+  GraphQLID, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull
 } = require("graphql");
 
 const json$server = require("axios").create({
   baseURL: "http://localhost:3000"
-})
+});
 
 const CompanyType = new GraphQLObjectType({
   name: "Company",
@@ -38,14 +38,26 @@ const UserType = new GraphQLObjectType({
   })
 });
 
-const RootQueryType = new GraphQLObjectType({
-  name: "RootQueryType",
+const Query = new GraphQLObjectType({
+  name: "Select",
   fields: {
+    users: {
+      type: new GraphQLList(UserType),
+      resolve(source, args) {
+        return json$server.get("/users").then(({ data }) => data);
+      }
+    },
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },
       resolve(source, args) {
         return json$server.get(`/users/${args.id}`).then(({ data }) => data);
+      }
+    },
+    companies: {
+      type: new GraphQLList(CompanyType),
+      resolve(source, args) {
+        return json$server.get("/companies").then(({ data }) => data);
       }
     },
     company: {
@@ -58,6 +70,24 @@ const RootQueryType = new GraphQLObjectType({
   }
 });
 
+const Mutation = new GraphQLObjectType({
+  name: "UpsertOrDelete",
+  fields: {
+    addUser: {
+      type: UserType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
+        company: { type: GraphQLID }
+      },
+      resolve(source, args) {
+        return json$server.post("/users", args).then(({ data }) => data);
+      }
+    }
+  }
+});
+
 module.exports = new GraphQLSchema({
-  query: RootQueryType
+  query: Query,
+  mutation: Mutation
 });
