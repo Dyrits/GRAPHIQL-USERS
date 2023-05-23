@@ -100,7 +100,7 @@ const Mutation = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(source, { id }) {
-        return json$server.delete(`/users/${id}`).then(({ data }) => data);
+        return json$server.delete(`/users/${id}`).then(() => ({ id }));
       }
     }
   }

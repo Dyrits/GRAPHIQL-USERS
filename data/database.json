@@ -5,18 +5,6 @@
       "name": "Leanne Graham",
       "age": 20,
       "company": 1
-    },
-    {
-      "id": 2,
-      "name": "Ervin Howell",
-      "age": 25,
-      "company": 1
-    },
-    {
-      "id": 3,
-      "name": "Clementine Bauch",
-      "age": 30,
-      "company": 2
     }
   ],
   "companies": [
