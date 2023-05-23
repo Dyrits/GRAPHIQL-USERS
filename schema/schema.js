@@ -92,8 +92,8 @@ const Mutation = new GraphQLObjectType({
         age: { type: GraphQLInt },
         company: { type: GraphQLID }
       },
-      resolve(_, { id, name, age, company }) {
-        return json$server.patch(`/users/${id}`, { name, age, company }).then(({ data }) => data);
+      resolve(_, user) {
+        return json$server.patch(`/users/${user.id}`, user).then(({ data }) => data);
       }
     },
     deleteUser: {
